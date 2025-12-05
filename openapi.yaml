@@ -1,0 +1,79 @@
+openapi: 3.1.0
+info:
+  title: Cadastral Overlap API
+  version: "1.0.0"
+servers:
+  - url: https://YOUR-RENDER-APP.onrender.com
+paths:
+  /overlap:
+    post:
+      operationId: overlap
+      summary: Compute overlap of an input polygon with cadastral parcels (EPSG:5514)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [coords]
+              properties:
+                coords:
+                  type: array
+                  description: "Polygon vertices as [[x,y], ...] in EPSG:5514"
+                  items:
+                    type: array
+                    minItems: 2
+                    maxItems: 2
+                    items:
+                      type: number
+                include_touches:
+                  type: boolean
+                  default: false
+                limit:
+                  type: integer
+                  minimum: 1
+                  maximum: 5000
+                  default: 500
+      responses:
+        "200":
+          description: Results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ku:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name: { type: string }
+                        href: { type: string }
+                  parcels:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        label: { type: string }
+                        nationalCadastralReference: { type: string }
+                        areaParcel: { type: number }
+                        overlap: { type: number }
+                        pct: { type: number, nullable: true }
+                        kuName: { type: string, nullable: true }
+                        kuHref: { type: string, nullable: true }
+                  overlapTotal: { type: number }
+                  polygonArea: { type: number }
+                  bbox:
+                    type: object
+                    properties:
+                      minX: { type: number }
+                      minY: { type: number }
+                      maxX: { type: number }
+                      maxY: { type: number }
+  /health:
+    get:
+      operationId: health
+      summary: Health check
+      responses:
+        "200":
+          description: OK
