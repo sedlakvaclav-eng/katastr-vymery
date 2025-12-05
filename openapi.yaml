@@ -3,7 +3,7 @@ info:
   title: Cadastral Overlap API
   version: "1.0.0"
 servers:
-  - url: https://YOUR-RENDER-APP.onrender.com
+  - url: https://katastr-vymery.onrender.com
 paths:
   /overlap:
     post:
